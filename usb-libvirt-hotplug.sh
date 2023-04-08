@@ -5,6 +5,7 @@ DOMAIN="win10"
 DIR=/opt/usb-libvirt-hotplug
 PARSE_USB=${DIR}/parse_usb.sh
 BLACKLIST=${DIR}/usb.blacklist
+ALLOWLIST=${DIR}/usb.allowlist
 LOCK_FILE=${DIR}/hotplug.lock
 
 PROG="$(basename "$0")"
@@ -68,6 +69,7 @@ END
   </source>
 </hostdev>
 END
-  done <<< $(lsusb | grep -v -f $BLACKLIST | grep -v -f <($PARSE_USB $DOMAIN) | uniq)
+  #done <<< $(lsusb | grep -v -f $BLACKLIST | grep -v -f <($PARSE_USB $DOMAIN) | uniq)
+  done <<< $(lsusb | grep -f $ALLOWLIST | grep -v -f <($PARSE_USB $DOMAIN) | uniq)
 
 ) 200>"$LOCK_FILE"
